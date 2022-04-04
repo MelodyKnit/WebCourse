@@ -14,3 +14,17 @@ pip install aiohttp
 ```shell
 python __init__.py
 ```
+
+## Fiddler如何抓包与使用
+
+打开Fiddler
+
+![打开Fiddler](img/1.png)
+
+勾选https请求
+
+![勾选](img/2.png)
+
+对带qq的域名进行抓包，并且查看 `headers` 中是否存在 `cookie` 存在则鼠标右击 `cookies` 选择 `copy header`
+
+![抓包](img/3.png)
