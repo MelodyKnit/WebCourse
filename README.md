@@ -10,6 +10,19 @@
 pip install aiohttp
 ```
 
+### 修改 config.py
+修改 `room_id` 改为直播间的房间号
+```python
+WebCourseUrl = "wss://ke.qq.com/impush/socket.io"
+upload_pic_ie = "https://ke.qq.com/cgi-bin/web_ke/upload_pic_ie"
+# 直播间房间id
+room_id = 105024724
+# qq号（可以不填）
+user_id = 0
+# 显示的教师名称
+nickname = "[bot]"
+```
+
 ### 运行
 ```shell
 python __init__.py
@@ -28,3 +41,7 @@ python __init__.py
 对带qq的域名进行抓包，并且查看 `headers` 中是否存在 `cookie` 存在则鼠标右击 `cookies` 选择 `copy header`
 
 ![抓包](img/3.png)
+
+粘贴到 `cookie.txt`
+
+![添加cookie](img/4.png)
