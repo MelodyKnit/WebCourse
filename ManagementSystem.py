@@ -1,4 +1,5 @@
 from pprint import pprint
+from log import logger
 from typing import List
 from datetime import datetime
 from pandas import read_excel, DataFrame
@@ -15,7 +16,7 @@ class ManagementSystem:
         self.students = self.read_students()
         self.class_name_list = self.input()
         self.class_name = "-".join(self.class_name_list)
-        print("选择班级", self.class_name)
+        logger.info(f"选择班级<[{self.class_name}]>")
         self.class_student = list()
         for name in self.class_name_list:
             self.class_student += list(self.students[name].dropna().values)
@@ -63,9 +64,5 @@ class ManagementSystem:
 
     def save_speak(self):
         if self.speak:
-            pprint(self.speak)
-            DataFrame(self.speak).to_excel(self.save_path, index=False)
-            print("课堂讨论文件保存", self.save_path)
-
-
-
+            DataFrame.from_dict(self.speak, orient="index").transpose().to_excel(self.save_path, index=False)
+            print(f"课堂讨论文件保存: {self.save_path}")
