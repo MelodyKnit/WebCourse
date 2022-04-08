@@ -32,16 +32,16 @@ python __init__.py
 
 打开Fiddler
 
-![打开Fiddler](img/1.png)
+![打开Fiddler](docs/img/1.png)
 
 勾选https请求
 
-![勾选](img/2.png)
+![勾选](docs/img/2.png)
 
 对带qq的域名进行抓包，并且查看 `headers` 中是否存在 `cookie` 存在则鼠标右击 `cookies` 选择 `copy header`
 
-![抓包](img/3.png)
+![抓包](docs/img/3.png)
 
 粘贴到 `cookie.txt`
 
-![添加cookie](img/4.png)
+![添加cookie](docs/img/4.png)

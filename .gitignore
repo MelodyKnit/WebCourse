@@ -5,3 +5,4 @@ log/*.log
 test.py
 data/image/*.jpg
 data/speak/*.xlsx
+~$*
