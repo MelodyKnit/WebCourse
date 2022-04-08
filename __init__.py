@@ -46,10 +46,10 @@ async def _(data):
     if cmd == '0x6ff_0x510':
         member = data["data"]["msg_subcmd0x1_rsp_memberpage"]
         if command["show_user"]:
-            command["show_user"] = False
             member_list = user_list(member)
             if member["uint32_totalcount"] != len(member_list):
                 return await wc.all_user(member["uint32_totalcount"])
+            command["show_user"] = False
             empty_studio = ms.search(member_list)
             if empty_studio:
                 await wc.send_msg(now + "\n未加入直播间学生：\n" + "\n".join(empty_studio))
