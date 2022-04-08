@@ -1,5 +1,5 @@
 __pycache__
-cookie.txt
+_cookie.txt
 log/*.txt
 log/*.log
 test.py

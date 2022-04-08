@@ -1,6 +1,7 @@
 from asyncio import ensure_future, wait, create_task, sleep
 from json import loads, dumps, JSONDecodeError
 from pprint import pprint
+from os.path import exists
 from time import time
 from log import logger
 from datetime import datetime
@@ -51,7 +52,8 @@ class WebCourse:
 
     @property
     def cookie(self) -> str:
-        with open("cookie.txt", "r") as file:
+        file = "_cookie.txt" if exists("_cookie.txt") else "cookie.txt"
+        with open(file, "r") as file:
             cookie = file.read()
             if cookie:
                 return cookie
