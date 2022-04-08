@@ -12,9 +12,9 @@ async def on_message(bot: WebCourse, msg: Message, nickname: str):
     print(text)
     name = ms.class_student_name(nickname)
     ms.to_speak(name, text)
-    await bot.all_user()
     await msg.save_image(name)
     if text in ["缺席人员", "学生"]:
+        await bot.all_user()
         command["show_user"] = True
     elif text == "打卡":
         ...

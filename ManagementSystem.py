@@ -27,7 +27,6 @@ class ManagementSystem:
             if not self.speak.get(name, None):
                 self.speak[name] = []
             self.speak[name].append(msg or "[图片]")
-            print(self.speak)
 
     def input(self) -> List[str]:
         """选择班级"""
