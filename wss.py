@@ -2,7 +2,7 @@ from asyncio import ensure_future, wait, create_task, sleep
 from json import loads, dumps, JSONDecodeError
 from pprint import pprint
 from time import time
-from logger import logger
+from log import logger
 from datetime import datetime
 from aiohttp import ClientSession
 from aiohttp.client_ws import ClientWebSocketResponse
@@ -97,7 +97,8 @@ class WebCourse:
         """建立连接"""
         for i in [
             ["imconnect",
-             {"cmd": "register", "appId": "tencentedu", "roomId": self.str_room_id, "seq": self.seq, "modId": "webclass"}],
+             {"cmd": "register", "appId": "tencentedu", "roomId": self.str_room_id, "seq": self.seq,
+              "modId": "webclass"}],
             ["cgi", {"data": {"msg_subcmd0x2_req_get_current_speak_mode": {"uint32_course_abs_id": self.room_id},
                               "uint32_sub_cmd": 2}, "app_id": "tencentedu", "room_id": self.str_room_id,
                      "mod_id": "webclass", "request_id": self.request_id, "seq": self.seq,
@@ -251,7 +252,6 @@ class WebCourse:
             send_time: int = None,
             seq: int = None) -> Tuple[Optional[int], Optional[int]]:
         """发送消息"""
-        print(type(msg))
         if isinstance(msg, str):
             msg = Message(msg)
         msg.add_info(self.user_name)
@@ -300,16 +300,18 @@ class WebCourse:
         }])
         return send_time, seq
 
-    async def all_user(self):
+    async def all_user(self, count: int = 50):
         """发起获取直播间所以用户请求"""
+        min_count = 50
+        count = min_count if count < min_count else count
         await self.send(["cgi", {
             "data": {
                 "msg_subcmd0x1_req_memberpage": {
                     "str_course_abs_id": self.str_room_id,
                     "uint32_page_operation": 0,
-                    "uint32_page_num": 1,
+                    "uint32_page_num": count // min_count + 1,
                     "uint32_need_special_user": 1,
-                    "uint32_per_page_count": 50,
+                    "uint32_per_page_count": count,
                     "uint32_version": 1
                 }, "uint32_sub_cmd": 1},
             "app_id": "tencentedu",
@@ -318,6 +320,15 @@ class WebCourse:
             "request_id": self.request_id,
             "seq": self.seq,
             "cmd": "0x6ff_0x510"}])
+        await self.req_get_info()
+        await self.req_get_info()
+
+    async def req_get_info(self):
+        await self.send(
+            ["cgi",
+             {"data": {"msg_subcmd0x1_req_get_info": {"str_course_abs_id": self.str_room_id}, "uint32_sub_cmd": 1},
+              "app_id": "tencentedu", "room_id": self.str_room_id, "mod_id": "webclass",
+              "request_id": self.request_id, "seq": self.seq, "cmd": "0x6ff_0x509"}])
 
     async def run(self):
         await self.connect()

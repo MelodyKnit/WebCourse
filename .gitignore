@@ -1,1 +1,7 @@
 __pycache__
+cookie.txt
+log/*.txt
+log/*.log
+test.py
+data/image/*.jpg
+data/speak/*.xlsx

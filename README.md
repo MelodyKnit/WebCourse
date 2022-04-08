@@ -7,7 +7,7 @@
 
 ### 安装依赖模块
 ```shell
-pip install aiohttp
+pip install aiohttp pandas openpyxl
 ```
 
 ### 修改 config.py
