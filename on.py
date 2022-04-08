@@ -19,7 +19,7 @@ async def on_message(bot: WebCourse, msg: Message, nickname: str):
     elif text == "打卡":
         ...
     elif text == "抽选":
-        await bot.send_msg(choice(list(bot.class_user)))
+        await bot.send_msg(choice(list(ms.class_student)))
     else:
         ...
 

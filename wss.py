@@ -27,11 +27,6 @@ class WebCourse:
     request_id = "27de2b58-33a6-4bd3-8428-28de47500333"
 
     @property
-    def class_user(self) -> set:
-        with open("all_user.txt", "r", encoding="utf-8") as file:
-            return set(file.read().split())
-
-    @property
     def seq(self):
         self._seq += 1
         return self._seq
