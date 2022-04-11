@@ -7,7 +7,7 @@ from on import on_message, on_notice, ms, command
 import config
 from message import Message
 
-wc = WebCourse(config.room_id, config.user_id)
+wc = WebCourse(0, config.user_id)
 
 
 def user_list(data: dict):
@@ -51,6 +51,7 @@ async def _(data):
                 return await wc.all_user(member["uint32_totalcount"])
             command["show_user"] = False
             empty_studio = ms.search(member_list)
+            # print(empty_studio)
             if empty_studio:
                 await wc.send_msg(now + "\n未加入直播间学生：\n" + "\n".join(empty_studio))
             else:

@@ -21,6 +21,7 @@ class WebCourse:
     pingTimeout: int = 0
     pingInterval: int = 0
     _seq = -1
+    _cookie = ""
     _event = dict()
     _connect = set()
     wss: ClientWebSocketResponse = None
@@ -33,6 +34,20 @@ class WebCourse:
 
     @property
     def headers(self) -> dict:
+        """请求所需headers"""
+        return {
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": "zh-CN,zh;q=0.9",
+            "Referer": "https://ke.qq.com/teacher-client/speedIndex.html",
+            "User-Agent": "Mozilla/5.0 (Windows NT; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 "
+                          "Safari/537.36 TXEduLite/40219 (3.1.4.140) Theme/1.0 (NewUI) ",
+            "Cookie": self.cookie
+        }
+
+    @property
+    def wss_headers(self):
+        """wss连接所需的headers"""
         return {
             "Upgrade": "websocket",
             "Origin": "https://ke.qq.com",
@@ -47,12 +62,14 @@ class WebCourse:
 
     @property
     def cookie(self) -> str:
-        file = "_cookie.txt" if exists("_cookie.txt") else "cookie.txt"
-        with open(file, "r") as file:
-            cookie = file.read()
-            if cookie:
-                return cookie
-            logger.error("缺少cookie值，请将cookie值加入到cookie.txt")
+        """查看cookie是否存在，如果不存在则从文件中读取cookie"""
+        if not self._cookie:
+            file = "_cookie.txt" if exists("_cookie.txt") else "cookie.txt"
+            with open(file, "r") as file:
+                self._cookie = file.read()
+                if not self._cookie:
+                    logger.error("缺少cookie值，请将cookie值加入到cookie.txt")
+        return self._cookie
 
     @property
     def params(self):
@@ -67,7 +84,7 @@ class WebCourse:
         }
 
     @property
-    def session(self):
+    def session(self) -> ClientSession:
         if self._session is None:
             self._session = ClientSession()
         return self._session
@@ -89,6 +106,27 @@ class WebCourse:
     @staticmethod
     def time() -> int:
         return int(time())
+
+    async def select_course(self) -> int:
+        course = await self.query_course_list()
+        if course:
+            print("[选择直播间]")
+            for i, val in enumerate(course):
+                print(f" [{i}]\t{val['tid']} | {val['name']}")
+            room_id = course[int(input("[输入数字]: "))]
+            logger.info(f'监听直播间<[{room_id["name"]}]>')
+            return room_id["tid"]
+        return int(input("[输入直播间id]: "))
+
+    async def query_course_list(self):
+        """查询课程列表"""
+        async with self.session.get(config.query_course_list, headers=self.headers, params={
+            "cli_version": "40219",
+            "cli_platform": "4",
+            "bkn": "1587177770",
+            "t": "%.4f" % (time() % 1)
+        }) as res:
+            return (await res.json())["result"].get("course_info")
 
     async def im_connect(self):
         """建立连接"""
@@ -128,7 +166,9 @@ class WebCourse:
         await self.session.close()
 
     async def connect(self):
-        async with self.session.ws_connect(config.WebCourseUrl, params=self.params, headers=self.headers) as wss:
+        self.room_id = await self.select_course()
+        self.str_room_id = str(self.room_id)
+        async with self.session.ws_connect(config.WebCourseUrl, params=self.params, headers=self.wss_headers) as wss:
             self.wss = wss
             await self.im_connect()
             ensure_future(wait(
@@ -191,7 +231,7 @@ class WebCourse:
     ):
         self.user_id = user_id
         self.user_name = user_name or config.nickname
-        self.room_id = int(re.findall(r"/\d+", room_id)[-1].replace("/", "")) if isinstance(room_id, str) else room_id
+        self.room_id = room_id
         self.str_room_id = str(self.room_id)
         self._session = session
 

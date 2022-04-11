@@ -1,5 +1,5 @@
 from ManagementSystem import ManagementSystem
-from wss import WebCourse, Message, pprint
+from wss import WebCourse, Message, pprint, logger
 from random import choice
 ms = ManagementSystem()
 command = {
@@ -9,15 +9,13 @@ command = {
 
 async def on_message(bot: WebCourse, msg: Message, nickname: str):
     text = msg.raw_text()
-    print(text)
+    logger.info(f"{nickname}: \033[0m{text}")
     name = ms.class_student_name(nickname)
     ms.to_speak(name, text)
     await msg.save_image(name)
     if text in ["缺席人员", "学生"]:
         await bot.all_user()
         command["show_user"] = True
-    elif text == "打卡":
-        ...
     elif text == "抽选":
         await bot.send_msg(choice(list(ms.class_student)))
     else:
