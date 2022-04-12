@@ -21,8 +21,6 @@
 | 学生2 | 学生2 |
 
 
-4. 修改 `config.py` room_id为自己直播课堂的id
-
 ### 安装依赖模块
 ```shell
 pip install aiohttp pandas openpyxl

@@ -7,7 +7,7 @@ from datetime import datetime
 from pathlib import Path
 
 
-__all__ = ["logger"]
+__all__ = ["logger", "Path"]
 
 # 用户配置部分 ↓
 LEVEL_COLOR = {
@@ -103,7 +103,7 @@ def _get_logger(
     _logger.addHandler(stdout_handler)
 
     if log_to_file:
-        _tmp_path = Path(os.path.dirname(os.path.abspath(__file__))) / "log" / log_filename
+        _tmp_path = Path(os.path.dirname(os.path.abspath(__file__))) / "data" / "log" / log_filename
         file_handler = logging.handlers.TimedRotatingFileHandler(_tmp_path, when="midnight", backupCount=30)
         file_formatter = logging.Formatter(
             fmt=FILE_LOG_FMT,

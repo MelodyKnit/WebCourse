@@ -2,8 +2,8 @@ from asyncio import ensure_future, wait, create_task, sleep
 from json import loads, dumps, JSONDecodeError
 from pprint import pprint
 from os.path import exists
+from os import mkdir
 from time import time
-from log import logger
 from datetime import datetime
 from aiohttp import ClientSession
 from aiohttp.client_ws import ClientWebSocketResponse
@@ -14,6 +14,7 @@ import re
 
 import config
 from message import Message
+from log import logger, Path
 
 
 class WebCourse:
@@ -229,11 +230,21 @@ class WebCourse:
             *,
             session: ClientSession = None
     ):
+        self.mkdir()
         self.user_id = user_id
         self.user_name = user_name or config.nickname
         self.room_id = room_id
         self.str_room_id = str(self.room_id)
         self._session = session
+
+    @staticmethod
+    def mkdir():
+        filepath = Path("data")
+        if not filepath.exists():
+            filepath.mkdir()
+        for i in ["image", "log", "speak"]:
+            if not (i := filepath / i).exists():
+                i.mkdir()
 
     async def __aenter__(self):
         return self
