@@ -265,7 +265,7 @@ class WebCourse:
         if ack:
             await self.send(["ackPush", ack])
 
-    async def flower(self):
+    async def flower(self, name: str, uin: int):
         """送花"""
         await self.send([
             "cgi",
@@ -278,8 +278,8 @@ class WebCourse:
                         "uint32_buss_type": 5,
                         "uint32_auth_type": 1,
                         "uint32_auth_key": self.room_id,
-                        "uint64_dest_uin": 3017334555,
-                        "str_dest_nick": "李红日",
+                        "uint64_dest_uin": uin,
+                        "str_dest_nick": name,
                         "str_from_nick": self.user_name,
                         "str_from_makr": "",
                         "uint32_course_abs_id": self.room_id
